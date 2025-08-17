@@ -4,14 +4,21 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
+      "@app/*": ["app/*"],
       "@components/*": ["src/components/*"],
       "@constants/*": ["src/constants/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@store/*": ["src/store/*"],
+      "@utils/*": ["src/utils/*"],
+      "@providers/*": ["src/providers/*"],
       "@domain/*": ["src/domain/*"],
-      "@services/*": ["src/services/*"],
-      "@api/*": ["src/api/*"],
-      "@utils/*": ["src/utils/*"]
+      "@domain/entities/*": ["src/domain/entities/*"],
+      "@domain/repositories/*": ["src/domain/repositories/*"],
+      "@domain/usecases/*": ["src/domain/usecases/*"],
+      "@data/*": ["src/data/*"],
+      "@data/repositories/*": ["src/data/repositories/*"],
+      "@data/services/*": ["src/data/services/*"],
+      "@data/sources/*": ["src/data/sources/*"],
+      "@viewmodels/*": ["src/viewmodels/*"],
+      "@hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]

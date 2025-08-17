@@ -1,10 +1,17 @@
-import { useAuthStore } from "@store/authStore";
-import { Redirect } from "expo-router";
+import { Redirect } from 'expo-router';
+
+import { useAuth } from '@providers/AuthContext';
 
 export default function Index() {
-  const token = useAuthStore((s) => s.token);
-  if (!token) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
+
+  if (!user) {
     return <Redirect href="/(auth)/login" />;
   }
+
   return <Redirect href="/(tabs)/home" />;
 }

@@ -1,15 +1,18 @@
-import Button from "@components/Button";
-import Chip from "@components/Chip";
-import Input from "@components/Input";
-import { useAnalysisViewModel } from "@hooks/useAnalysisViewModel";
-import { Text, View } from "react-native";
+import { Text, View } from 'react-native';
+
+import Button from '@components/Button';
+import Chip from '@components/Chip';
+import Input from '@components/Input';
+
+import { useAnalysisViewModel } from '@viewmodels/useAnalysisViewModel';
 
 export default function AnalysisScreen() {
   const vm = useAnalysisViewModel();
 
   return (
     <View style={{ flex: 1, padding: 16, gap: 12 }}>
-      <Text style={{ fontSize: 22, fontWeight: "700" }}>Analizar</Text>
+      <Text style={{ fontSize: 22, fontWeight: '700' }}>Analizar</Text>
+
       <Input
         placeholder="Pega un mensaje o URL…"
         value={vm.text}
@@ -18,17 +21,17 @@ export default function AnalysisScreen() {
       />
 
       <Button
-        title={vm.loading ? "Escaneando…" : "Scan"}
+        title={vm.loading ? 'Escaneando…' : 'Scan'}
         onPress={vm.scan}
         disabled={vm.loading || !vm.text.trim()}
       />
 
       {vm.result && (
         <View style={{ gap: 8 }}>
-          <Text style={{ fontWeight: "700" }}>
+          <Text style={{ fontWeight: '700' }}>
             {vm.result.label} • Riesgo {Math.round(vm.result.score * 100)}/100
           </Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {vm.result.signals.map((s, i) => (
               <Chip key={i} text={s} />
             ))}
@@ -36,7 +39,7 @@ export default function AnalysisScreen() {
         </View>
       )}
 
-      {vm.error ? <Text style={{ color: "tomato" }}>{vm.error}</Text> : null}
+      {vm.error ? <Text style={{ color: 'tomato' }}>{vm.error}</Text> : null}
     </View>
   );
 }

@@ -1,8 +1,12 @@
+export type AnalysisLabel = 'safe' | 'phishing';
+
 export type Analysis = {
   id: string;
-  label: "Mensaje seguro" | "Posible phishing";
-  score: number;
+  user_id: string;
+  message_text?: string | null;
+  url?: string | null;
+  label: AnalysisLabel;
+  risk_score: number;
   signals: string[];
-  snippet: string;
-  createdAt: string;
+  created_at: string;
 };

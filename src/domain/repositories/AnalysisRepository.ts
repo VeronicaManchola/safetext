@@ -1,7 +1,6 @@
-import { Analysis } from "../entities/Analysis";
-import { Message } from "../entities/Message";
+import type { Analysis } from '@domain/entities/analysis';
 
 export interface AnalysisRepository {
-  analyze(input: Message): Promise<Analysis>;
-  history(page?: number): Promise<Analysis[]>;
+  create(input: Omit<Analysis, 'id' | 'created_at'>): Promise<void>;
+  listPaged(from: number, limit: number): Promise<Analysis[]>;
 }

@@ -1,10 +1,14 @@
-import { Slot } from "expo-router";
-import { View } from "react-native";
+import { Slot } from 'expo-router';
+import { View } from 'react-native';
+
+import { AuthProvider } from '@providers/AuthContext';
 
 export default function RootLayout() {
   return (
-    <View style={{ flex: 1 }}>
-      <Slot />
-    </View>
+    <AuthProvider>
+      <View style={{ flex: 1 }}>
+        <Slot />
+      </View>
+    </AuthProvider>
   );
 }
