@@ -2,9 +2,27 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { Analysis } from '@domain/entities/analysis';
 import type { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
-import { getHistory } from '@domain/usecases/GetHistory';
 
 import { AnalysisRepositorySupabase } from '@data/repositories/AnalysisRepositorySupabase';
+
+function getHistory(repo: AnalysisRepository) {
+  return async ({
+    page = 1,
+    pageSize = 10,
+  }: {
+    page?: number;
+    pageSize?: number;
+  }): Promise<{
+    items: Analysis[];
+    hasMore: boolean;
+  }> => {
+    const from = (page - 1) * pageSize;
+    const rows = await repo.listPaged(from, pageSize);
+    const hasMore = rows.length === pageSize;
+
+    return { items: rows, hasMore };
+  };
+}
 
 type UIHistoryItem = {
   id: string;

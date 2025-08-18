@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity } from 'react-native';
 
-import { colors } from '@constants/colors';
+import { Colors } from '@constants/colors';
 
 type Props = { title: string; onPress: () => void; disabled?: boolean };
 export default function Button({ title, onPress, disabled }: Props) {
@@ -9,13 +9,13 @@ export default function Button({ title, onPress, disabled }: Props) {
       onPress={onPress}
       disabled={disabled}
       style={{
-        backgroundColor: disabled ? '#B6C8E6' : colors.light.buttonPrimary,
+        backgroundColor: disabled ? '#B6C8E6' : Colors.light.buttonPrimary,
         padding: 14,
         borderRadius: 14,
         alignItems: 'center',
       }}
     >
-      <Text style={{ color: colors.light.buttonPrimaryText, fontWeight: '700' }}>{title}</Text>
+      <Text style={{ color: Colors.light.buttonPrimaryText, fontWeight: '700' }}>{title}</Text>
     </TouchableOpacity>
   );
 }

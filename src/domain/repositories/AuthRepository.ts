@@ -1,5 +1,12 @@
+export type AuthUser = {
+  id: string;
+  email?: string;
+};
+
 export interface AuthRepository {
-  login(email: string, password: string): Promise<{ token: string }>;
-  register(email: string, password: string): Promise<{ token: string }>;
-  logout(): Promise<void>;
+  signIn(email: string, password: string): Promise<AuthUser>;
+  signUp(email: string, password: string, name?: string): Promise<AuthUser>;
+  signOut(): Promise<void>;
+  getCurrentUser(): Promise<AuthUser | null>;
+  onAuthStateChange(callback: (user: AuthUser | null) => void): () => void;
 }

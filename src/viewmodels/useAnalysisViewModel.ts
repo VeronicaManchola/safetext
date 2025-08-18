@@ -1,4 +1,3 @@
-// src/viewmodels/useAnalysisViewModel.ts
 import { useEffect, useMemo, useState } from 'react';
 
 import { Analysis } from '@domain/entities/analysis';

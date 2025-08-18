@@ -1,14 +1,30 @@
 import { Slot } from 'expo-router';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AuthProvider } from '@providers/AuthContext';
+import { AuthProvider } from 'src/context/AuthContext';
 
-export default function RootLayout() {
+export default function Layout() {
   return (
     <AuthProvider>
-      <View style={{ flex: 1 }}>
-        <Slot />
-      </View>
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <View style={styles.inner}>
+          <Slot />
+        </View>
+      </SafeAreaView>
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F2F2F2',
+  },
+  inner: {
+    flex: 1,
+    maxWidth: 420,
+    alignSelf: 'center',
+    width: '100%',
+  },
+});

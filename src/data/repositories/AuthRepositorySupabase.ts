@@ -1,19 +1,22 @@
-import { supabase } from '@constants/supabase';
+import { AuthRepository, AuthUser } from '@domain/repositories/AuthRepository';
 
-export type AuthUser = {
-  id: string;
-  email?: string;
-};
+import { supabase } from '@data/sources/supabaseClient';
 
-export const authRepository = {
+export const authRepository: AuthRepository = {
   async signIn(email: string, password: string): Promise<AuthUser> {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error || !data.user) throw error ?? new Error('No user');
     return { id: data.user.id, email: data.user.email ?? undefined };
   },
 
-  async signUp(email: string, password: string): Promise<AuthUser> {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  async signUp(email: string, password: string, name?: string): Promise<AuthUser> {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: name ? { name } : undefined,
+      },
+    });
     if (error || !data.user) throw error ?? new Error('No user');
     return { id: data.user.id, email: data.user.email ?? undefined };
   },

@@ -2,22 +2,24 @@ import { Link, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
+import { useAuth } from 'src/context/AuthContext';
+
 import Button from '@components/Button';
 import Input from '@components/Input';
 
-import { colors } from '@constants/colors';
+import { Colors } from '@constants/colors';
 
-import { useAuth } from '@providers/AuthContext';
+import { isValidEmail } from '@utils/validators';
 
 export default function LoginScreen() {
   const router = useRouter();
   const { signIn, loading, user } = useAuth();
   const scheme = useColorScheme() ?? 'light';
-  const C = colors[scheme];
+  const C = Colors[scheme];
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(true); // UI-only por ahora
+  const [remember, setRemember] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,15 +27,14 @@ export default function LoginScreen() {
   }, [user, router]);
 
   const canSubmit = useMemo(() => {
-    const okEmail = /\S+@\S+\.\S+/.test(email.trim());
+    const okEmail = isValidEmail(email.trim());
     return okEmail && password.length > 0;
   }, [email, password]);
 
   async function handleLogin() {
     setError(null);
     try {
-      await signIn(email.trim(), password);
-      // redirección ocurre en el useEffect
+      await signIn(email.trim(), password, remember);
     } catch (e: any) {
       setError(e?.message ?? 'No fue posible iniciar sesión');
     }
@@ -41,16 +42,13 @@ export default function LoginScreen() {
 
   return (
     <View style={[styles.screen, { backgroundColor: C.background }]}>
-      {/* Topbar con logo y marca */}
       <View style={styles.topbar}>
-        {/* Badge de logo simple para RN; reemplázalo por tu componente/Icono si lo tienes */}
-        <View style={[styles.logo, { backgroundColor: colors.light.textContrast }]}>
+        <View style={[styles.logo, { backgroundColor: Colors.light.textContrast }]}>
           <View style={[styles.logoShield, { backgroundColor: '#054BA6' }]} />
         </View>
         <Text style={[styles.brand, { color: '#054BA6' }]}>SafeText</Text>
       </View>
 
-      {/* Header centrado */}
       <View style={styles.header}>
         <View style={[styles.badge, { borderColor: '#8FAFD9', backgroundColor: C.background }]}>
           <View style={[styles.badgeShield, { backgroundColor: '#054BA6' }]} />
@@ -61,9 +59,8 @@ export default function LoginScreen() {
         </Text>
       </View>
 
-      {/* Card del formulario */}
       <View
-        style={[styles.card, { borderColor: '#8FAFD9', backgroundColor: C.surface ?? '#FFFFFF' }]}
+        style={[styles.card, { borderColor: '#8FAFD9', backgroundColor: '#FFFFFF' }]}
         accessibilityLabel="Formulario de inicio de sesión"
       >
         <View style={styles.form}>

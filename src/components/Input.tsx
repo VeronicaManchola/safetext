@@ -1,6 +1,6 @@
 import { TextInput, TextInputProps } from 'react-native';
 
-import { colors } from '@constants/colors';
+import { Colors } from '@constants/colors';
 
 export default function Input(props: TextInputProps) {
   return (
@@ -9,8 +9,8 @@ export default function Input(props: TextInputProps) {
       {...props}
       style={[
         {
-          backgroundColor: colors.light.inputBg,
-          borderColor: colors.light.border,
+          backgroundColor: Colors.light.inputBg,
+          borderColor: Colors.light.border,
           borderWidth: 2,
           borderRadius: 14,
           paddingHorizontal: 12,

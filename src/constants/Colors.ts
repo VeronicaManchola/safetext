@@ -8,7 +8,7 @@ const TEXT = '#0B1220';
 const TEXT_MUTED = '#1F2A44';
 const BORDER = '#8FAFD9';
 
-export const colors = {
+export const Colors = {
   light: {
     text: TEXT,
     textMuted: TEXT_MUTED,
