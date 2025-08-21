@@ -1,13 +1,15 @@
 import { Link, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
-import { useAuth } from 'src/context/AuthContext';
+import logo from '@assets/images/adaptive-icon.png';
 
 import Button from '@components/Button';
 import Input from '@components/Input';
 
 import { Colors } from '@constants/colors';
+
+import { useAuth } from '@context/AuthContext';
 
 import { isValidEmail } from '@utils/validators';
 
@@ -41,17 +43,10 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={[styles.screen, { backgroundColor: C.background }]}>
-      <View style={styles.topbar}>
-        <View style={[styles.logo, { backgroundColor: Colors.light.textContrast }]}>
-          <View style={[styles.logoShield, { backgroundColor: '#054BA6' }]} />
-        </View>
-        <Text style={[styles.brand, { color: '#054BA6' }]}>SafeText</Text>
-      </View>
-
+    <View style={[styles.screen, { backgroundColor: C.surface }]}>
       <View style={styles.header}>
-        <View style={[styles.badge, { borderColor: '#8FAFD9', backgroundColor: C.background }]}>
-          <View style={[styles.badgeShield, { backgroundColor: '#054BA6' }]} />
+        <View style={styles.badge}>
+          <Image source={logo} style={[styles.badgeShield]} />
         </View>
         <Text style={[styles.title, { color: '#054BA6' }]}>Iniciar sesión</Text>
         <Text style={[styles.subtitle, { color: C.text }]} accessibilityElementsHidden>
@@ -131,49 +126,22 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 16,
   },
-  topbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  logo: {
-    width: 28,
-    height: 28,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  logoShield: {
-    width: 22,
-    height: 22,
-    borderRadius: 4,
-  },
-  brand: {
-    fontSize: 20,
-    fontWeight: '700',
-    letterSpacing: 0.2,
-  },
   header: {
     alignItems: 'center',
     marginTop: 6,
   },
   badge: {
-    width: 64,
-    height: 64,
-    borderRadius: 16,
-    borderWidth: 2,
+    marginVertical: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
   },
   badgeShield: {
-    width: 34,
-    height: 34,
+    width: 120,
+    height: 120,
     borderRadius: 8,
   },
   title: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: '800',
   },
   subtitle: {

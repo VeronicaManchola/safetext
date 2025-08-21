@@ -2,7 +2,7 @@ import { Slot } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AuthProvider } from 'src/context/AuthContext';
+import { AuthProvider } from '@context/AuthContext';
 
 export default function Layout() {
   return (
@@ -19,7 +19,6 @@ export default function Layout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F2',
   },
   inner: {
     flex: 1,

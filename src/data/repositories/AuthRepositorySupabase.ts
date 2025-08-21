@@ -1,6 +1,7 @@
-import { AuthRepository, AuthUser } from '@domain/repositories/AuthRepository';
-
 import { supabase } from '@data/sources/supabaseClient';
+
+import { AuthUser } from '@domain/entities/user';
+import { AuthRepository } from '@domain/repositories/AuthRepository';
 
 export const authRepository: AuthRepository = {
   async signIn(email: string, password: string): Promise<AuthUser> {
@@ -22,6 +23,7 @@ export const authRepository: AuthRepository = {
   },
 
   async signOut(): Promise<void> {
+    console.log('Signing out in supabase...');
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   },

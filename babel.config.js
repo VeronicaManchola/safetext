@@ -12,7 +12,7 @@ module.exports = function (api) {
             '@components': './src/components',
             '@constants': './src/constants',
             '@utils': './src/utils',
-            '@providers': './src/providers',
+            '@context': './src/context',
             '@domain': './src/domain',
             '@domain/entities': './src/domain/entities',
             '@domain/repositories': './src/domain/repositories',

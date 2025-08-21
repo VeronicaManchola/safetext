@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { AuthUser } from '@domain/repositories/AuthRepository';
-
 import { authRepository } from '@data/repositories/AuthRepositorySupabase';
+
+import { AuthUser } from '@domain/repositories/AuthRepository';
 
 type AuthContextType = {
   user: AuthUser | null;
@@ -21,6 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    console.log('[AuthProvider] user:', user);
+  }, [user]);
 
   useEffect(() => {
     let mounted = true;
@@ -94,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearError();
     setLoading(true);
     try {
+      console.log('Signing out...');
       await authRepository.signOut();
       await AsyncStorage.removeItem('remember');
       setUser(null);

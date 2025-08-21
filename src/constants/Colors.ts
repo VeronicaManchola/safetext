@@ -2,7 +2,8 @@ const PRIMARY = '#054BA6';
 const PRIMARY_DARK = '#035AA6';
 const ACCENT = '#2C7BBF';
 const SECONDARY = '#8FAFD9';
-const BACKGROUND = '#F2F2F2';
+const BACKGROUND = '#e5e5e5';
+const INPUT_BG = '#F2F2F2';
 const WHITE = '#FFFFFF';
 const TEXT = '#0B1220';
 const TEXT_MUTED = '#1F2A44';
@@ -28,7 +29,7 @@ export const Colors = {
     buttonPrimaryText: WHITE,
     buttonSecondary: ACCENT,
     buttonSecondaryText: WHITE,
-    inputBg: BACKGROUND,
+    inputBg: INPUT_BG,
     inputText: TEXT,
     chipBg: SECONDARY,
     chipText: PRIMARY,

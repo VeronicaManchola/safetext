@@ -1,7 +1,4 @@
-export type AuthUser = {
-  id: string;
-  email?: string;
-};
+import { AuthUser } from '@domain/entities/user';
 
 export interface AuthRepository {
   signIn(email: string, password: string): Promise<AuthUser>;

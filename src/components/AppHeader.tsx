@@ -1,19 +1,31 @@
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Settings } from 'lucide-react-native';
+import { useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import OptionsModal from '@components/OptionsModal';
 
 import { Colors } from '@constants/colors';
 
-type AppHeaderProps = {
-  style?: ViewStyle;
-};
+import { useAuth } from '@context/AuthContext';
 
-export default function AppHeader({ style }: AppHeaderProps) {
+export default function AppHeader({ style }: { style?: any }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const { signOut } = useAuth();
+
   return (
     <View style={[styles.topbar, style]}>
-      <View style={styles.logo}>
-        {/* Aquí luego reemplazarás esto por la imagen oficial */}
-        <View style={styles.logoBubble} />
-      </View>
+      <Image source={require('@assets/images/favicon.png')} style={styles.logo} />
       <Text style={styles.brand}>SafeText</Text>
+
+      <Pressable onPress={() => setModalVisible(true)} style={styles.settings}>
+        <Settings color={Colors.light.icon} size={22} />
+      </Pressable>
+
+      <OptionsModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        options={[{ label: 'Cerrar sesión', onPress: signOut }]}
+      />
     </View>
   );
 }
@@ -22,26 +34,23 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 10,
   },
   logo: {
-    width: 28,
-    height: 28,
+    width: 35,
+    height: 35,
     borderRadius: 6,
-    backgroundColor: Colors.light.title,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoBubble: {
-    width: 14,
-    height: 10,
-    borderRadius: 4,
-    backgroundColor: Colors.light.textContrast,
   },
   brand: {
     fontSize: 20,
     fontWeight: '700',
     color: Colors.light.title,
     letterSpacing: 0.2,
+    flex: 1,
+    marginLeft: 8,
+  },
+  settings: {
+    padding: 8,
   },
 });

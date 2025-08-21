@@ -1,11 +1,12 @@
 import { useRouter } from 'expo-router';
-import { Shield } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useAuth } from 'src/context/AuthContext';
+import logo from '@assets/images/adaptive-icon.png';
 
 import { Colors } from '@constants/colors';
+
+import { useAuth } from '@context/AuthContext';
 
 export default function Index() {
   const router = useRouter();
@@ -20,10 +21,10 @@ export default function Index() {
 
   if (loading || user) return null;
 
+  console.log('[Index] loading:', loading, '| user:', user);
   return (
-    <View style={styles.container}>
-      <Shield size={64} color={Colors.light.title} />
-      <Text style={styles.title}>SafeText</Text>
+    <View style={[styles.container, { backgroundColor: Colors.light.surface }]}>
+      <Image source={logo} style={{ width: 200, height: 200, marginBottom: 32 }} />
 
       <View style={styles.buttons}>
         <Pressable style={styles.primaryButton} onPress={() => router.push('/(auth)/login')}>
@@ -41,7 +42,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.surface,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
