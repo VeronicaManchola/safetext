@@ -1,4 +1,5 @@
-import { Settings } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -18,13 +19,21 @@ export default function AppHeader({ style }: { style?: any }) {
       <Text style={styles.brand}>SafeText</Text>
 
       <Pressable onPress={() => setModalVisible(true)} style={styles.settings}>
-        <Settings color={Colors.light.icon} size={22} />
+        <Ionicons name="settings-outline" size={24} color={Colors.light.accent} />
       </Pressable>
 
       <OptionsModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        options={[{ label: 'Cerrar sesión', onPress: signOut }]}
+        options={[
+          {
+            label: 'Cerrar sesión',
+            onPress: () => {
+              signOut();
+              router.replace('/');
+            },
+          },
+        ]}
       />
     </View>
   );

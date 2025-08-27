@@ -23,7 +23,6 @@ export const authRepository: AuthRepository = {
   },
 
   async signOut(): Promise<void> {
-    console.log('Signing out in supabase...');
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   },

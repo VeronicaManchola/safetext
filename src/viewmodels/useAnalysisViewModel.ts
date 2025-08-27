@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { Analysis } from '@domain/entities/analysis';
-import { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
-
 import { AnalysisRepositorySupabase } from '@data/repositories/AnalysisRepositorySupabase';
 import { analyzeLocally } from '@data/services/analysisLocalHeuristics';
 import { supabase } from '@data/sources/supabaseClient';
+
+import { Analysis } from '@domain/entities/analysis';
+import { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
 
 type UIResult = {
   label: 'Mensaje seguro' | 'Posible phishing';
@@ -23,16 +23,25 @@ type UIHistoryItem = {
 
 type Deps = {
   repo?: AnalysisRepository;
-  analyzer?: (text: string) => {
+  analyzer?: (text: string) => Promise<{
     label: 'Mensaje seguro' | 'Posible phishing';
     score: number;
     signals: string[];
-  };
+  }>;
   currentUser?: () => Promise<{ id: string } | null>;
   pageSize?: number;
 };
 
 const DEFAULT_PAGE = 10;
+
+function analyzeLocallyAsync(t: string) {
+  const r = analyzeLocally(t);
+  return Promise.resolve({
+    label: r.label,
+    score: r.score,
+    signals: r.signals,
+  });
+}
 
 /**
  * ViewModel para la pantalla de Análisis e Historial.
@@ -42,7 +51,7 @@ const DEFAULT_PAGE = 10;
  */
 export function useAnalysisViewModel(deps?: Deps) {
   const repo = deps?.repo ?? AnalysisRepositorySupabase;
-  const analyzer = deps?.analyzer ?? analyzeLocally;
+  const analyzer = deps?.analyzer ?? analyzeLocallyAsync;
   const pageSize = deps?.pageSize ?? DEFAULT_PAGE;
   const getCurrentUser = deps?.currentUser ?? defaultGetCurrentUser;
 
@@ -81,7 +90,7 @@ export function useAnalysisViewModel(deps?: Deps) {
       if (!user) throw new Error('Sesión no válida');
 
       // 2) Analiza (heurística local por defecto; reemplazable por API NLP/ML)
-      const r = analyzer(text);
+      const r = await analyzer(text);
 
       // 3) Persiste en repositorio (Supabase)
       const toSave: Omit<Analysis, 'id' | 'created_at'> = {

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { AnalysisRepositorySupabase } from '@data/repositories/AnalysisRepositorySupabase';
+
 import type { Analysis } from '@domain/entities/analysis';
 import type { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
-
-import { AnalysisRepositorySupabase } from '@data/repositories/AnalysisRepositorySupabase';
 
 function getHistory(repo: AnalysisRepository) {
   return async ({
@@ -27,7 +27,7 @@ function getHistory(repo: AnalysisRepository) {
 type UIHistoryItem = {
   id: string;
   label: 'Mensaje seguro' | 'Posible phishing';
-  score: number; // 0–1
+  score: number;
   snippet: string;
   createdAt?: string;
 };
@@ -41,14 +41,12 @@ export function useHistoryViewModel(deps?: Deps) {
   const repo = deps?.repo ?? AnalysisRepositorySupabase;
   const pageSize = deps?.pageSize ?? 10;
 
-  // Estado UI
   const [items, setItems] = useState<UIHistoryItem[]>([]);
-  const [page, setPage] = useState(1); // 1-based
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
-  // Caso de uso instanciado con el repo elegido
   const historyUC = useMemo(() => getHistory(repo), [repo]);
 
   const loadMore = useCallback(async () => {
@@ -56,7 +54,6 @@ export function useHistoryViewModel(deps?: Deps) {
     setLoading(true);
     setError(undefined);
     try {
-      // Aquí está el uso exacto que mencionaste:
       const { items: rows, hasMore: nextHasMore } = await historyUC({ page, pageSize: pageSize });
 
       // Mapeo a DTO de UI
@@ -72,7 +69,6 @@ export function useHistoryViewModel(deps?: Deps) {
     }
   }, [historyUC, page, pageSize, hasMore, loading]);
 
-  // Carga inicial
   useEffect(() => {
     if (items.length === 0) {
       loadMore();
@@ -81,16 +77,13 @@ export function useHistoryViewModel(deps?: Deps) {
   }, []);
 
   return {
-    // datos
     history: items,
     hasMore,
     loading,
     error,
 
-    // acciones
     loadMore,
 
-    // helpers para la vista (opcional)
     isEmpty: !loading && items.length === 0,
   };
 }

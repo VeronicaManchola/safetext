@@ -37,4 +37,9 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Phyton
+backend/__pycache__/
+backend/.venv/
+backend/.env
+
 app-example

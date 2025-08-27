@@ -3,15 +3,18 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthProvider } from '@context/AuthContext';
+import { UIProvider } from '@context/UIContext';
 
 export default function Layout() {
   return (
     <AuthProvider>
-      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-        <View style={styles.inner}>
-          <Slot />
-        </View>
-      </SafeAreaView>
+      <UIProvider>
+        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+          <View style={styles.inner}>
+            <Slot />
+          </View>
+        </SafeAreaView>
+      </UIProvider>
     </AuthProvider>
   );
 }

@@ -7,10 +7,14 @@ import PageTitle from '@components/PageTitle';
 
 import { Colors } from '@constants/colors';
 
+import { analyzeViaApi } from '@data/services/analysisApi';
+
 import { useAnalysisViewModel } from '@viewmodels/useAnalysisViewModel';
 
 export default function AnalysisScreen() {
-  const { text, setText, result, loading, error, canScan, scan } = useAnalysisViewModel();
+  const { text, setText, result, loading, error, canScan, scan } = useAnalysisViewModel({
+    analyzer: analyzeViaApi,
+  });
 
   const feedback = useMemo(() => {
     if (!result) return null;

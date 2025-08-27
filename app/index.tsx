@@ -21,7 +21,6 @@ export default function Index() {
 
   if (loading || user) return null;
 
-  console.log('[Index] loading:', loading, '| user:', user);
   return (
     <View style={[styles.container, { backgroundColor: Colors.light.surface }]}>
       <Image source={logo} style={{ width: 200, height: 200, marginBottom: 32 }} />

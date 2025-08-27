@@ -1,5 +1,5 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { History, MessageSquare } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
 
 import AppHeader from '@components/AppHeader';
@@ -20,13 +20,15 @@ export default function HomeScreen() {
         <Card
           title="Analizar un mensaje"
           subtitle="Pega texto y obtén un veredicto."
-          icon={<MessageSquare color={Colors.light.accent} size={20} />}
+          icon={
+            <Ionicons name="chatbubble-ellipses-outline" size={20} color={Colors.light.accent} />
+          }
           onPress={() => router.push('/(tabs)/analysis')}
         />
         <Card
           title="Ver historial"
           subtitle="Consulta tus análisis recientes."
-          icon={<History color={Colors.light.accent} size={20} />}
+          icon={<Ionicons name="time-outline" size={20} color={Colors.light.accent} />}
           onPress={() => router.push('/(tabs)/history')}
         />
       </View>
