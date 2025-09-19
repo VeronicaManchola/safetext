@@ -1,7 +1,7 @@
+import { supabase } from '@data/sources/supabaseClient';
+
 import { Analysis } from '@domain/entities/analysis';
 import { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
-
-import { supabase } from '@data/sources/supabaseClient';
 
 const TABLE = 'analyses';
 
@@ -18,10 +18,11 @@ export const AnalysisRepositorySupabase: AnalysisRepository = {
   /**
    * Retorna una página de historial ordenada por created_at desc.
    */
-  async listPaged(from: number, limit: number): Promise<Analysis[]> {
+  async listPaged(userId: string, from: number, limit: number): Promise<Analysis[]> {
     const { data, error } = await supabase
       .from(TABLE)
       .select('*')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .range(from, from + limit - 1);
 

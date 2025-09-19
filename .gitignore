@@ -43,3 +43,14 @@ backend/.venv/
 backend/.env
 
 app-example
+
+
+# Model artifacts
+backend/artifacts/
+*.pt
+*.bin
+*.safetensors
+tokenizer.model
+tokenizer.json
+spiece.model
+*.onnx

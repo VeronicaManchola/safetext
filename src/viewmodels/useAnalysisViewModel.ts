@@ -8,14 +8,14 @@ import { Analysis } from '@domain/entities/analysis';
 import { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
 
 type UIResult = {
-  label: 'Mensaje seguro' | 'Posible phishing';
+  label: 'Mensaje seguro' | 'Posible smishing';
   score: number; // 0–1
   signals: string[];
 };
 
 type UIHistoryItem = {
   id: string;
-  label: 'Mensaje seguro' | 'Posible phishing';
+  label: 'Mensaje seguro' | 'Posible smishing';
   score: number; // 0–1
   snippet: string;
   createdAt?: string;
@@ -24,7 +24,7 @@ type UIHistoryItem = {
 type Deps = {
   repo?: AnalysisRepository;
   analyzer?: (text: string) => Promise<{
-    label: 'Mensaje seguro' | 'Posible phishing';
+    label: 'Mensaje seguro' | 'Posible smishing';
     score: number;
     signals: string[];
   }>;
@@ -97,7 +97,7 @@ export function useAnalysisViewModel(deps?: Deps) {
         user_id: user.id,
         message_text: text,
         url: extractUrl(text),
-        label: r.label === 'Posible phishing' ? 'phishing' : 'safe',
+        label: r.score >= 0.5 ? 'smishing' : 'safe',
         risk_score: Math.round(r.score * 100),
         signals: r.signals,
       };
@@ -128,7 +128,10 @@ export function useAnalysisViewModel(deps?: Deps) {
     setHistoryLoading(true);
     setError(null);
     try {
-      const page = await repo.listPaged(from, pageSize);
+      const user = await getCurrentUser();
+      if (!user) throw new Error('Sesión no válida');
+
+      const page = await repo.listPaged(user.id, from, pageSize);
       const mapped = page.map(mapRowToUI);
 
       setHistory((prev) => [...prev, ...mapped]);
@@ -175,7 +178,7 @@ function extractUrl(t: string): string | null {
 }
 
 function mapRowToUI(row: Analysis): UIHistoryItem {
-  const label = row.label === 'phishing' ? 'Posible phishing' : 'Mensaje seguro';
+  const label = row.label === 'smishing' ? 'Posible smishing' : 'Mensaje seguro';
   const score = clamp01((row.risk_score ?? 0) / 100);
   const raw = (row.message_text || '').trim();
   const snippet = raw.length > 120 ? raw.slice(0, 120) + '…' : raw || '(sin texto)';

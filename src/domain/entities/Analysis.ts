@@ -1,4 +1,4 @@
-export type AnalysisLabel = 'safe' | 'phishing';
+export type AnalysisLabel = 'safe' | 'smishing';
 
 export type Analysis = {
   id: string;

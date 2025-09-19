@@ -1,7 +1,8 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 
 import AppHeader from '@components/AppHeader';
-import Button from '@components/Button';
 import Card from '@components/Card';
 import PageTitle from '@components/PageTitle';
 
@@ -10,48 +11,71 @@ import { Colors } from '@constants/colors';
 import { useHistoryViewModel } from '@viewmodels/useHistoryViewModel';
 
 export default function HistoryScreen() {
-  const vm = useHistoryViewModel();
+  const { history, hasMore, loading, refreshing, error, loadMore, reload } = useHistoryViewModel();
+
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [reload]),
+  );
 
   return (
-    <ScrollView contentContainerStyle={styles.screen}>
+    <View style={styles.screen}>
       <AppHeader style={styles.header} />
       <PageTitle title="Historial" subtitle="Consulta tus análisis recientes" />
 
-      {vm.isEmpty ? (
-        <View style={styles.empty}>
-          <Text style={styles.emptyText}>No hay análisis aún.</Text>
-        </View>
-      ) : null}
-
-      {vm.history.map((h) => (
-        <Card
-          key={h.id}
-          title={`${h.label} • ${(h.score * 100).toFixed(0)}%`}
-          subtitle={h.snippet}
-        />
-      ))}
-
-      <Button
-        title={vm.loading ? 'Cargando…' : 'Cargar más'}
-        onPress={vm.loadMore}
-        disabled={vm.loading || !vm.hasMore}
+      <FlatList
+        data={history}
+        keyExtractor={(it) => it.id}
+        renderItem={({ item }) => (
+          <Card
+            title={`${item.label} • ${(item.score * 100).toFixed(0)}%`}
+            subtitle={item.snippet}
+          />
+        )}
+        contentContainerStyle={styles.listContent}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
+        ListEmptyComponent={
+          loading ? null : (
+            <View style={styles.empty}>
+              <Text style={styles.emptyText}>No hay análisis aún.</Text>
+            </View>
+          )
+        }
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          if (hasMore && !loading) loadMore();
+        }}
+        ListFooterComponent={
+          <View style={styles.footer}>
+            {loading ? <Text style={styles.loading}>Cargando…</Text> : null}
+            {!hasMore && history.length > 0 ? (
+              <Text style={styles.end}>No hay más resultados</Text>
+            ) : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+          </View>
+        }
       />
-
-      {vm.error ? <Text style={styles.error}>{vm.error}</Text> : null}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
     padding: 16,
-    gap: 12,
     backgroundColor: Colors.light.surface,
+    gap: 16,
+    flex: 1,
   },
   header: {
     marginTop: 12,
     marginBottom: 16,
+    paddingHorizontal: 16,
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 24,
+    gap: 12,
   },
   empty: {
     paddingVertical: 24,
@@ -61,8 +85,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.light.textMuted,
   },
-  error: {
-    marginTop: 12,
-    color: 'tomato',
+  footer: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    gap: 8,
   },
+  loading: { color: Colors.light.textMuted },
+  end: { color: Colors.light.textMuted },
+  error: { marginTop: 8, color: 'tomato' },
 });

@@ -18,7 +18,7 @@ export default function AnalysisScreen() {
 
   const feedback = useMemo(() => {
     if (!result) return null;
-    const color = result.label === 'Posible phishing' ? '#A3083F' : '#035AA6';
+    const color = result.label === 'Posible smishing' ? '#A3083F' : '#035AA6';
     return (
       <View style={[styles.feedbackBox, { borderColor: color }]}>
         <Text style={[styles.feedbackLabel, { color }]}>{result.label}</Text>
@@ -52,7 +52,14 @@ export default function AnalysisScreen() {
         textAlignVertical="top"
       />
 
-      <Button title={loading ? 'Analizando…' : 'Analizar'} onPress={scan} disabled={!canScan} />
+      <Button
+        title={loading ? 'Analizando…' : 'Analizar'}
+        onPress={() => {
+          scan();
+          setText('');
+        }}
+        disabled={!canScan}
+      />
 
       {loading && <ActivityIndicator size="small" color={Colors.light.accent} />}
 
