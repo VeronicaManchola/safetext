@@ -68,7 +68,7 @@ export default function RegisterScreen() {
           <View style={styles.row2}>
             <View style={{ flex: 1 }}>
               <Text style={[styles.label, { color: C.text }]}>Nombre</Text>
-              <Input placeholder="Andrea" value={nombre} onChangeText={setNombre} />
+              <Input placeholder="Tu Nombre" value={nombre} onChangeText={setNombre} />
             </View>
           </View>
 

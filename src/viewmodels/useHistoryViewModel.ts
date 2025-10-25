@@ -25,7 +25,7 @@ function getHistory(repo: AnalysisRepository) {
 
 type UIHistoryItem = {
   id: string;
-  label: 'Mensaje seguro' | 'Posible smishing';
+  label: 'Mensaje posiblemente seguro' | 'Posible smishing';
   score: number;
   snippet: string;
   createdAt?: string;
@@ -138,7 +138,7 @@ export function useHistoryViewModel(deps?: Deps) {
 }
 
 function mapRowToUI(row: Analysis): UIHistoryItem {
-  const label = row.label === 'smishing' ? 'Posible smishing' : 'Mensaje seguro';
+  const label = row.label === 'smishing' ? 'Posible smishing' : 'Mensaje posiblemente seguro';
   const score = clamp01((row.risk_score ?? 0) / 100);
   const raw = (row.message_text || '').trim();
   const snippet = raw.length > 120 ? raw.slice(0, 120) + '…' : raw || '(sin texto)';

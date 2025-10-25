@@ -27,7 +27,8 @@ def analyze():
 
     if not text:
         return jsonify({"error": "text requerido"}), 400
-
+    print("Recibido texto de longitud", len(text))
+    print("Recibida URL:", url)
     result = analyze_text(text, url)
     return jsonify(result)
 

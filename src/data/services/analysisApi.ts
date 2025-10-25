@@ -10,7 +10,7 @@ export async function analyzeViaApi(
   text: string,
   url?: string,
 ): Promise<{
-  label: 'Mensaje seguro' | 'Posible smishing';
+  label: 'Mensaje posiblemente seguro' | 'Posible smishing';
   score: number;
   signals: string[];
 }> {
@@ -35,7 +35,7 @@ export async function analyzeViaApi(
 
     const data: ApiResponse = await res.json();
     return {
-      label: data.label === 'smishing' ? 'Posible smishing' : 'Mensaje seguro',
+      label: data.label === 'smishing' ? 'Posible smishing' : 'Mensaje posiblemente seguro',
       score: typeof data.score === 'number' ? data.score : data.risk_score / 100,
       signals: data.signals ?? [],
     };

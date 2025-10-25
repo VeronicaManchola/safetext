@@ -1,5 +1,5 @@
 export type LocalAnalysis = {
-  label: 'Mensaje seguro' | 'Posible smishing';
+  label: 'Mensaje posiblemente seguro' | 'Posible smishing';
   score: number;
   signals: string[];
 };
@@ -32,7 +32,8 @@ export function analyzeLocally(text: string): LocalAnalysis {
   const base = signals.length / 5; // normaliza a 0–1
   const score = Math.max(0, Math.min(1, base));
 
-  const label: LocalAnalysis['label'] = score >= 0.5 ? 'Posible smishing' : 'Mensaje seguro';
+  const label: LocalAnalysis['label'] =
+    score >= 0.5 ? 'Posible smishing' : 'Mensaje posiblemente seguro';
 
   return { label, score, signals };
 }

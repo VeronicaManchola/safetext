@@ -12,7 +12,7 @@ def phishtank_check(url: str):
     try:
         r = requests.post(PT_ENDPOINT, data=data, headers=headers, timeout=TIMEOUT)
         if r.status_code in (403, 429):
-            return 0.0, f"PhishTank: no disponible ({r.status_code})"
+            return 0.0, f"PhishTank: no disponible"
         r.raise_for_status()
         j = r.json().get("results", {})
         in_db = bool(j.get("in_database"))

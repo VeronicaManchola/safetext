@@ -53,11 +53,11 @@ def analyze_text(text: str, url: str | None = None) -> dict:
         probs = _softmax(out.logits).detach().cpu().numpy()[0].tolist()
 
     p_model = float(probs[phish_id])
-    signals.append(f"Probabilidad por modelo: {p_model:.2f}")
+    signals.append(f"Probabilidad de smishing: {p_model:.2f}")
 
     if url and not str(url).startswith("https://"):
         signals.append("URL sin https")
-    if re.search(r"(bit\.ly|tinyurl\.com|t\.co|goo\.gl|ow\.ly|shorturl\.at)", raw_text, flags=re.I):
+    if re.search(r"(bit\.ly|tinyurl\.com|t\.co|goo\.gl|ow\.ly|shorturl\.at|v1\.mk)", raw_text, flags=re.I):
         signals.append("Acortador de enlaces detectado")
 
     p_url = 0.0

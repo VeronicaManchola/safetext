@@ -33,6 +33,9 @@ export const Colors = {
     inputText: TEXT,
     chipBg: SECONDARY,
     chipText: PRIMARY,
+    riskSafe: '#27AE60',
+    riskWarning: '#F1C40F',
+    riskDanger: '#E74C3C',
   },
 
   dark: {
@@ -58,5 +61,8 @@ export const Colors = {
     inputText: '#E6F1F2',
     chipBg: '#123238',
     chipText: ACCENT,
+    riskSafe: '#27AE60',
+    riskWarning: '#F1C40F',
+    riskDanger: '#E74C3C',
   },
 };

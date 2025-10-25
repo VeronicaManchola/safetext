@@ -2,21 +2,30 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@constants/colors';
 
+type CardVariant = 'safe' | 'warning' | 'danger' | 'default';
 type Props = {
   title: string;
   subtitle?: string;
   icon?: React.ReactNode;
   onPress?: () => void;
+  variant?: CardVariant;
 };
 
-export default function Card({ title, subtitle, icon, onPress }: Props) {
+export default function Card({ title, subtitle, icon, onPress, variant = 'default' }: Props) {
+  const colorMap = {
+    safe: Colors.light.riskSafe,
+    warning: Colors.light.riskWarning,
+    danger: Colors.light.riskDanger,
+    default: Colors.light.border,
+  };
+  const borderColor = colorMap[variant];
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
     >
       <View style={styles.content}>
-        <View style={styles.iconContainer}>{icon}</View>
+        <View style={[styles.iconContainer, { borderColor }]}>{icon}</View>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}

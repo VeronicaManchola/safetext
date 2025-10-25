@@ -8,14 +8,14 @@ import { Analysis } from '@domain/entities/analysis';
 import { AnalysisRepository } from '@domain/repositories/AnalysisRepository';
 
 type UIResult = {
-  label: 'Mensaje seguro' | 'Posible smishing';
+  label: 'Mensaje posiblemente seguro' | 'Posible smishing';
   score: number; // 0–1
   signals: string[];
 };
 
 type UIHistoryItem = {
   id: string;
-  label: 'Mensaje seguro' | 'Posible smishing';
+  label: 'Mensaje posiblemente seguro' | 'Posible smishing';
   score: number; // 0–1
   snippet: string;
   createdAt?: string;
@@ -23,8 +23,11 @@ type UIHistoryItem = {
 
 type Deps = {
   repo?: AnalysisRepository;
-  analyzer?: (text: string) => Promise<{
-    label: 'Mensaje seguro' | 'Posible smishing';
+  analyzer?: (
+    text: string,
+    url?: string,
+  ) => Promise<{
+    label: 'Mensaje posiblemente seguro' | 'Posible smishing';
     score: number;
     signals: string[];
   }>;
@@ -85,25 +88,22 @@ export function useAnalysisViewModel(deps?: Deps) {
     setLoading(true);
     setError(null);
     try {
-      // 1) Usuario actual
       const user = await getCurrentUser();
       if (!user) throw new Error('Sesión no válida');
 
-      // 2) Analiza (heurística local por defecto; reemplazable por API NLP/ML)
-      const r = await analyzer(text);
+      const url = extractUrl(text);
+      const r = await analyzer(text, url);
 
-      // 3) Persiste en repositorio (Supabase)
       const toSave: Omit<Analysis, 'id' | 'created_at'> = {
         user_id: user.id,
         message_text: text,
-        url: extractUrl(text),
+        url,
         label: r.score >= 0.5 ? 'smishing' : 'safe',
         risk_score: Math.round(r.score * 100),
         signals: r.signals,
       };
       await repo.create(toSave);
 
-      // 4) Actualiza estado de resultado y “inyecta” al tope del historial
       setResult(r);
 
       setHistory((prev) => [
@@ -172,13 +172,15 @@ async function defaultGetCurrentUser(): Promise<{ id: string } | null> {
   return { id: data.user.id };
 }
 
-function extractUrl(t: string): string | null {
-  const m = (t || '').match(/https?:\/\/[^\s]+/i);
-  return m ? m[0] : null;
+function extractUrl(t: string): string | undefined {
+  if (!t) return undefined;
+  const regex = /\b((?:https?:\/\/)?(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:\/[^\s]*)?)/gi;
+  const match = t.match(regex);
+  return match ? match[0] : undefined;
 }
 
 function mapRowToUI(row: Analysis): UIHistoryItem {
-  const label = row.label === 'smishing' ? 'Posible smishing' : 'Mensaje seguro';
+  const label = row.label === 'smishing' ? 'Posible smishing' : 'Mensaje posiblemente seguro';
   const score = clamp01((row.risk_score ?? 0) / 100);
   const raw = (row.message_text || '').trim();
   const snippet = raw.length > 120 ? raw.slice(0, 120) + '…' : raw || '(sin texto)';

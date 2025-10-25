@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
@@ -27,12 +28,30 @@ export default function HistoryScreen() {
       <FlatList
         data={history}
         keyExtractor={(it) => it.id}
-        renderItem={({ item }) => (
-          <Card
-            title={`${item.label} • ${(item.score * 100).toFixed(0)}%`}
-            subtitle={item.snippet}
-          />
-        )}
+        renderItem={({ item }) => {
+          let variant: 'safe' | 'warning' | 'danger' = 'safe';
+          let iconName: keyof typeof Ionicons.glyphMap = 'checkmark-circle-outline';
+          let iconColor = Colors.light.riskSafe;
+
+          if (item.label === 'Posible smishing') {
+            variant = 'danger';
+            iconName = 'close-circle-outline';
+            iconColor = Colors.light.riskDanger;
+          } else if (item.score >= 0.4 && item.score < 0.7) {
+            variant = 'warning';
+            iconName = 'alert-circle-outline';
+            iconColor = Colors.light.riskWarning;
+          }
+
+          return (
+            <Card
+              title={`${item.label} • ${(item.score * 100).toFixed(0)}%`}
+              subtitle={item.snippet}
+              variant={variant}
+              icon={<Ionicons name={iconName} size={22} color={iconColor} />}
+            />
+          );
+        }}
         contentContainerStyle={styles.listContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}
         ListEmptyComponent={
